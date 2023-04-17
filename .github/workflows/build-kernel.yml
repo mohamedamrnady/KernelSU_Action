@@ -172,16 +172,3 @@ jobs:
       with:
         name: boot${{ env.UPLOADNAME }}-${{ env.DEVICE }}-${{ env.BUILD_TIME }}
         path: kernel_workspace/boot.img
-
-    - name: Upload to Telegram
-      env:
-          TG_TOKEN: ${{ secrets.TG_TOKEN }}
-      if: env.TG_TOKEN != null
-      run: |
-          TG_CHAT="@nadyspace"
-          NL=$'\n'
-          MSG="AnyKernel3${{ env.UPLOADNAME }}-${{ env.DEVICE }}-${{ env.BUILD_TIME }}"
-          echo "'$MSG'"
-          POST="https://api.telegram.org/bot${TG_TOKEN}/sendDocument"
-          curl -X POST --data-urlencode "document=@AnyKernel3${{ env.UPLOADNAME }}-${{ env.DEVICE }}-${{ env.BUILD_TIME }}.zip" --data-urlencode "caption=${MSG}" --data-urlencode "chat_id=${TG_CHAT}" "$POST"
-
