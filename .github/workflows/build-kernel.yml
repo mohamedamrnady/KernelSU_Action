@@ -182,6 +182,7 @@ jobs:
         zip -q -0 "AnyKernel3${{ env.UPLOADNAME }}-${{ env.DEVICE }}-${{ env.BUILD_TIME }}".zip
         MSG= md5sum "AnyKernel3${{ env.UPLOADNAME }}-${{ env.DEVICE }}-${{ env.BUILD_TIME }}.zip" | grep -oE "[0-9a-f]{32}"
         TG_CHAT="@nadyspace"
+        POST="https://api.telegram.org/bot${TG_TOKEN}/sendDocument"
         curl -X POST --data-urlencode "document=@AnyKernel3${{ env.UPLOADNAME }}-${{ env.DEVICE }}-${{ env.BUILD_TIME }}.zip" --data-urlencode "caption=${MSG}" --data-urlencode "chat_id=${TG_CHAT}" "$POST"
 
     
