@@ -114,6 +114,7 @@ jobs:
           else
               echo "DTBO image is empty"
           fi
+          ls android-kernel/out/arch/${{ env.TARGET_ARCH }}/boot/
 
       - name: Make Anykernel3
         if: env.CHECK_FILE_IS_OK == 'true'
