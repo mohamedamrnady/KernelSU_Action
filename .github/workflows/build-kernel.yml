@@ -177,7 +177,7 @@ jobs:
       env:
           TG_TOKEN: ${{ secrets.TG_TOKEN }}
       if: env.TG_TOKEN != null
-      run:
+      run: |
         cd kernel_workspace
         cd AnyKernel3
         zip -q -0 "AnyKernel3${{ env.UPLOADNAME }}-${{ env.DEVICE }}-${{ env.BUILD_TIME }}".zip
