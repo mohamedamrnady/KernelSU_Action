@@ -172,18 +172,15 @@ jobs:
       with:
         name: boot${{ env.UPLOADNAME }}-${{ env.DEVICE }}-${{ env.BUILD_TIME }}
         path: kernel_workspace/boot.img
-        
+
     - name: Upload to Telegram
       env:
           TG_TOKEN: ${{ secrets.TG_TOKEN }}
       if: env.TG_TOKEN != null
       run: |
-        cd kernel_workspace
-        cd AnyKernel3
-        zip -q -0 "AnyKernel3${{ env.UPLOADNAME }}-${{ env.DEVICE }}-${{ env.BUILD_TIME }}".zip
-        MSG= md5sum "AnyKernel3${{ env.UPLOADNAME }}-${{ env.DEVICE }}-${{ env.BUILD_TIME }}.zip" | grep -oE "[0-9a-f]{32}"
-        TG_CHAT="@nadyspace"
-        POST="https://api.telegram.org/bot${TG_TOKEN}/sendDocument"
-        curl -X POST --data-urlencode "document=@AnyKernel3${{ env.UPLOADNAME }}-${{ env.DEVICE }}-${{ env.BUILD_TIME }}.zip" --data-urlencode "caption=${MSG}" --data-urlencode "chat_id=${TG_CHAT}" "$POST"
-
-    
+          cd kernel_workspace/AnyKernel3
+          zip -9 -r "AnyKernel3${{ env.UPLOADNAME }}-${{ env.DEVICE }}-${{ env.BUILD_TIME }}".zip .
+          MSG= "$(md5sum "AnyKernel3${{ env.UPLOADNAME }}-${{ env.DEVICE }}-${{ env.BUILD_TIME }}.zip" | grep -oE "[0-9a-f]{32}")"
+          TG_CHAT="@nadyspace"
+          POST="https://api.telegram.org/bot${TG_TOKEN}/sendDocument"
+          curl -v -F "document=@AnyKernel3${{ env.UPLOADNAME }}-${{ env.DEVICE }}-${{ env.BUILD_TIME }}.zip" -F "caption=${MSG}" --form-string "chat_id=${TG_CHAT}" "$POST"
