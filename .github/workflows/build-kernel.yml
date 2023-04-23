@@ -199,7 +199,6 @@ jobs:
       run: |
           cd kernel_workspace/AnyKernel3
           zip -9 -r "AnyKernel3${{ env.UPLOADNAME }}-${{ env.DEVICE }}-${{ env.BUILD_TIME }}".zip .
-          MSG= "$(md5sum "AnyKernel3${{ env.UPLOADNAME }}-${{ env.DEVICE }}-${{ env.BUILD_TIME }}.zip" | grep -oE "[0-9a-f]{32}")"
           TG_CHAT="@nadyspace"
           POST="https://api.telegram.org/bot${TG_TOKEN}/sendDocument"
-          curl -v -F "document=@AnyKernel3${{ env.UPLOADNAME }}-${{ env.DEVICE }}-${{ env.BUILD_TIME }}.zip" -F "caption=${MSG}" --form-string "chat_id=${TG_CHAT}" "$POST"
+          curl -v -F "document=@AnyKernel3${{ env.UPLOADNAME }}-${{ env.DEVICE }}-${{ env.BUILD_TIME }}.zip" -F --form-string "chat_id=${TG_CHAT}" "$POST"
