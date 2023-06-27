@@ -202,7 +202,7 @@ jobs:
             cp android-kernel/out/arch/${{ env.ARCH }}/boot/dtbo.img AnyKernel3/
         fi
         if [ ${{ env.CHECK_DTB_IS_OK }} = true ]; then
-            cp android-kernel/out/arch/${{ env.TARGET_ARCH }}/boot/dtb.img AnyKernel3/
+            cp android-kernel/out/arch/${{ env.ARCH }}/boot/dtb.img AnyKernel3/
         fi
         rm -rf AnyKernel3/.git* AnyKernel3/README.md
 
