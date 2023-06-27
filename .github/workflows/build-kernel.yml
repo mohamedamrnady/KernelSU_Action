@@ -182,7 +182,7 @@ jobs:
                exit 1
            fi
        fi
-       if [ -f android-kernel/out/arch/${{ env.TARGET_ARCH }}/boot/dtb.img ]; then
+       if [ -f android-kernel/out/arch/${{ env.ARCH }}/boot/dtb.img ]; then
            echo "CHECK_DTB_IS_OK=true" >> $GITHUB_ENV
        else
            echo "DTB image is empty"
