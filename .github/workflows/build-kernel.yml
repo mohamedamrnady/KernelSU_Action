@@ -133,9 +133,10 @@ jobs:
       - name: Build kernel
         env:
           TG_BOT_TOKEN: ${{ secrets.TG_TOKEN }}
+          TG_CHAT_ID: "@nadyspace"
+          CI: false
         run: |
           cd $GITHUB_WORKSPACE/kernel_workspace/android-kernel
-          TG_CHAT_ID="@nadyspace"
           export PATH=$GITHUB_WORKSPACE/kernel_workspace/clang-aosp/bin:$PATH
           export KBUILD_BUILD_HOST=Github-Action
           export KBUILD_BUILD_USER=$(echo ${{ github.actor }} | tr A-Z a-z)
