@@ -239,12 +239,6 @@ jobs:
                exit 1
            fi
        fi
-       if [ -f android-kernel/out/arch/${{ env.ARCH }}/boot/dtb.img ]; then
-           echo "CHECK_DTB_IS_OK=true" >> $GITHUB_ENV
-       else
-           echo "DTB image is empty"
-           exit 1
-       fi
   
     - name: Make Anykernel3
       if: env.CHECK_FILE_IS_OK == 'true'
@@ -257,9 +251,6 @@ jobs:
         cp android-kernel/out/arch/${{ env.ARCH }}/boot/${{ env.KERNEL_IMAGE_NAME }} AnyKernel3/
         if [ ${{ env.CHECK_DTBO_IS_OK }} = true ]; then
             cp android-kernel/out/arch/${{ env.ARCH }}/boot/dtbo.img AnyKernel3/
-        fi
-        if [ ${{ env.CHECK_DTB_IS_OK }} = true ]; then
-            cp android-kernel/out/arch/${{ env.ARCH }}/boot/dtb.img AnyKernel3/
         fi
         rm -rf AnyKernel3/.git* AnyKernel3/README.md
 
@@ -297,13 +288,6 @@ jobs:
       with:
         name: dtbo-${{ env.DEVICE }}-${{ env.BUILD_TIME }}
         path: kernel_workspace/android-kernel/out/arch/${{ env.ARCH }}/boot/dtbo.img
-
-    - name: Upload DTB image
-      if: env.CHECK_DTB_IS_OK == 'true'
-      uses: actions/upload-artifact@v3
-      with:
-        name: dtb-${{ env.DEVICE }}-${{ env.BUILD_TIME }}
-        path: kernel_workspace/android-kernel/out/arch/${{ env.ARCH }}/boot/dtb.img
 
     - name: Upload boot image
       if: env.MAKE_BOOT_IMAGE_IS_OK == 'true'
