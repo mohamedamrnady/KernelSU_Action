@@ -327,7 +327,7 @@ jobs:
       if: env.TG_TOKEN != null
       run: |
           cd kernel_workspace/AnyKernel3
-          zip -9 -r "AnyKernel3${{ env.UPLOADNAME }}-${{ env.DEVICE }}-${{ env.BUILD_TIME }}".zip .
+          zip -9 -r "AnyKernel3${{ env.LOCALVERSION }}${{ env.UPLOADNAME }}-${{ env.DEVICE }}-${{ env.BUILD_TIME }}".zip .
           TG_CHAT="@nadyspace"
           POST="https://api.telegram.org/bot${TG_TOKEN}/sendDocument"
           curl -v -F "document=@AnyKernel3${{ env.UPLOADNAME }}-${{ env.DEVICE }}-${{ env.BUILD_TIME }}.zip" --form-string "chat_id=${TG_CHAT}" "$POST"
