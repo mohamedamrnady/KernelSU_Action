@@ -40,6 +40,21 @@ if [ -z "$(grep "ksu" fs/stat.c)" ]; then
     fi
 fi
 
+## namespace.c
+if [ -z "$(grep "ksu" fs/namespace.c)" ]; then
+    sed -i '/static inline int check_mnt(struct mount \*mnt)/i\extern int check_mnt(struct mount *mnt);' fs/namespace.c
+    sed -i 's/^static inline int check_mnt(struct mount \*mnt)/inline int check_mnt(struct mount *mnt)/' fs/namespace.c
+
+    sed -i '/void mntput_no_expire(struct mount \*mnt)/i\extern void mntput_no_expire(struct mount *mnt);' fs/namespace.c
+    sed -i 's/^static void mntput_no_expire(struct mount \*mnt)/void mntput_no_expire(struct mount *mnt)/' fs/namespace.c
+
+    sed -i '/int do_umount(struct mount \*mnt, int flags)/i\extern int do_umount(struct mount *mnt, int flags);' fs/namespace.c
+    sed -i 's/^static int do_umount(struct mount \*mnt, int flags)/int do_umount(struct mount *mnt, int flags)/' fs/namespace.c
+
+    sed -i '/bool may_mount(void)/i\extern bool may_mount(void);' fs/namespace.c
+    sed -i 's/^static inline bool may_mount(void)/inline bool may_mount(void)/' fs/namespace.c
+fi
+
 # drivers/input changes
 ## input.c
 if [ -z "$(grep "ksu" drivers/input/input.c)" ]; then
