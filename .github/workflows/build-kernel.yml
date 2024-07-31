@@ -243,13 +243,13 @@ jobs:
             git clone https://gitlab.com/simonpunk/susfs4ksu susfs --depth=1
             cd susfs
             cp ./kernel_patches/KernelSU/10_enable_susfs_for_ksu.patch $GITHUB_WORKSPACE/kernel_workspace/android-kernel/KernelSU/
-            cp ./kernel_patches/50_add_susfs_in_kernel-4.14.patch $GITHUB_WORKSPACE/kernel_workspace/android-kernel/
+            cp ./kernel_patches/50_add_susfs_in_kernel-${{ env.KERNEL_VERSION }}.patch $GITHUB_WORKSPACE/kernel_workspace/android-kernel/
             cp ./kernel_patches/fs/susfs.c $GITHUB_WORKSPACE/kernel_workspace/android-kernel/fs/
             cp ./kernel_patches/include/linux/susfs.h $GITHUB_WORKSPACE/kernel_workspace/android-kernel/include/linux/
             cd $GITHUB_WORKSPACE/kernel_workspace/android-kernel/KernelSU
             patch -p1 < 10_enable_susfs_for_ksu.patch
             cd $GITHUB_WORKSPACE/kernel_workspace/android-kernel
-            patch -p1 < 50_add_susfs_in_kernel-4.14.patch
+            patch -p1 < 50_add_susfs_in_kernel-${{ env.KERNEL_VERSION }}.patch
             echo "CONFIG_KSU_SUSFS=y" >> arch/${{ env.ARCH }}/configs/${{ env.KERNEL_CONFIG }}
           fi
 
