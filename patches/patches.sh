@@ -1,16 +1,18 @@
 #!/bin/bash
 # Patches author: weishu <twsxtd@gmail.com>
-# Shell authon: xiaoleGun <1592501605@qq.com>
+# Shell author: xiaoleGun <1592501605@qq.com>
 #               bdqllW <bdqllT@gmail.com>
 # Tested kernel versions: 5.4, 4.19, 4.14, 4.9
 # 20240123
 
 patch_files=(
     fs/exec.c
+    fs/namespace.c
     fs/open.c
     fs/read_write.c
     fs/stat.c
     drivers/input/input.c
+    fs/internal.h
 )
 
 for i in "${patch_files[@]}"; do
@@ -22,7 +24,17 @@ for i in "${patch_files[@]}"; do
 
     case $i in
 
-    # fs/ changes
+    ## fs/internal.h
+    fs/internal.h)
+        sed -i '/extern void __init mnt_init/i\int path_umount(struct path *path, int flags);' fs/internal.h
+        ;;
+
+    ## fs/namespace.c
+    fs/namespace.c)
+        sed -i '/static inline bool may_mandlock/a\static int can_umount(const struct path *path, int flags) { struct mount *mnt = real_mount(path->mnt); if (!may_mount()) return -EPERM; if (path->dentry != path->mnt->mnt_root) return -EINVAL; if (!check_mnt(mnt)) return -EINVAL; if (mnt->mnt.mnt_flags & MNT_LOCKED) return -EINVAL; if (flags & MNT_FORCE && !capable(CAP_SYS_ADMIN)) return -EPERM; return 0; }' fs/namespace.c
+        sed -i '/static inline bool may_mandlock/a\int path_umount(struct path *path, int flags) { struct mount *mnt = real_mount(path->mnt); int ret; ret = can_umount(path, flags); if (!ret) ret = do_umount(mnt, flags); dput(path->dentry); mntput_no_expire(mnt); return ret; }' fs/namespace.c
+        ;;
+
     ## exec.c
     fs/exec.c)
         sed -i '/static int do_execveat_common/i\#ifdef CONFIG_KSU\nextern bool ksu_execveat_hook __read_mostly;\nextern int ksu_handle_execveat(int *fd, struct filename **filename_ptr, void *argv,\n			void *envp, int *flags);\nextern int ksu_handle_execveat_sucompat(int *fd, struct filename **filename_ptr,\n				 void *argv, void *envp, int *flags);\n#endif' fs/exec.c
