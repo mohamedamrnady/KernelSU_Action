@@ -67,9 +67,10 @@ jobs:
 
       - name: Download Compiler
         run: |
+          mkdir -p ~/.local/clang
           wget https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/${{ env.CLANG_BRANCH }}/clang-${{ env.CLANG_VERSION }}.tar.gz
           tar -C ~/.local/clang/ -zxvf clang-${{ env.CLANG_VERSION }}.tar.gz
-          
+
       - name: Download mkbootimg tools
         if: env.BUILD_BOOT_IMG == 'true'
         run: |
