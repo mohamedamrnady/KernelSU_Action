@@ -65,11 +65,9 @@ jobs:
           sudo apt-get install --no-install-recommends -yqq make bc bison flex cpio ca-certificates curl python2 zip libarchive-tools git lib{c6,c,ssl,xml2,mpc}-dev lib{debuginfod-common,debuginfod1} findutils ccache
           mkdir -p $GITHUB_WORKSPACE/kernel_workspace
 
-      - name: Download Custom-Gcc
-        if: env.USE_CUSTOM_GCC_64 == 'true' || env.USE_CUSTOM_GCC_32 == 'true'
+      - name: Download Compiler
         run: |
-          git clone --depth=1 --single-branch https://github.com/cyberknight777/gcc-arm64 ~/.local/gcc64
-          git clone --depth=1 --single-branch https://github.com/cyberknight777/gcc-arm ~/.local/gcc32
+          git clone --depth=1 --single-branch -b 20 https://bitbucket.org/orgese/clang ~/.local/clang
 
       - name: Download mkbootimg tools
         if: env.BUILD_BOOT_IMG == 'true'
@@ -143,9 +141,4 @@ jobs:
             export KSU_EXPECTED_SIZE=${{ env.KSU_EXPECTED_SIZE }}
             export KSU_EXPECTED_HASH=${{ env.KSU_EXPECTED_HASH }}
           fi
-          ./build.sh cidebug+gcc+upload+pix+tel
-          if [ ${{ env.ENABLE_CCACHE }} = true ]; then
-              make -j$(nproc --all) CC="ccache clang" O=out ARCH=${{ env.ARCH }} ${{ env.CUSTOM_CMDS }} ${{ env.EXTRA_CMDS }} ${{ env.GCC_64 }} ${{ env.GCC_32 }}
-          else
-              make -j$(nproc --all) CC=clang O=out ARCH=${{ env.ARCH }} ${{ env.CUSTOM_CMDS }} ${{ env.EXTRA_CMDS }} ${{ env.GCC_64 }} ${{ env.GCC_32 }}
-          fi
+          ./build.sh cidebug+cla+llvm+upload+pix+tel
